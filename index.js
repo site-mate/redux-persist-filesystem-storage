@@ -79,29 +79,47 @@ const FilesystemStorage = {
         }
       }),
 
-  getAllKeys: (callback?: (error: ?Error, keys: ?Array<string>) => any) =>
-    RNFetchBlob.fs
+  getAllKeys: (callback?: (error: ?Error, keys: ?Array<string>) => any) => {
+    console.log('getAllKeys1');
+    
+    return RNFetchBlob.fs
       .exists(options.storagePath)
-      .then(exists =>
-        exists ? true : RNFetchBlob.fs.mkdir(options.storagePath)
-      )
-      .then(() =>
-        RNFetchBlob.fs
-          .ls(options.storagePath)
-          .then(files => files.map<string>(file => options.fromFileName(file)))
-          .then(files => {
-            callback && callback(null, files);
-            if (!callback) {
-              return files;
-            }
-          })
-      )
+      .then(async exists => {
+        console.log('getAllKeys2', exists);
+
+        if (exists) {
+          return true;
+        }
+
+        try {
+          await RNFetchBlob.fs.mkdir(options.storagePath);
+        } catch(e) {
+          console.log('getAllKeys2.1', e);
+          return true;
+        }
+
+        return true;
+      })
+      .then(() => {
+        console.log('getAllKeys3');
+
+        return RNFetchBlob.fs
+        .ls(options.storagePath)
+        .then(files => files.map<string>(file => options.fromFileName(file)))
+        .then(files => {
+          callback && callback(null, files);
+          if (!callback) {
+            return files;
+          }
+        });
+      })
       .catch(error => {
+        console.log('getAllKeysError', error);
         callback && callback(error);
         if (!callback) {
           throw error;
         }
-      }),
+      })},
 
     clear: undefined // Workaround for Flow error coming from `clear` not being part of object literal
 };
