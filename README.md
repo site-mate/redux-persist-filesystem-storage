@@ -1,7 +1,10 @@
 # Sitemate fork
 
-The reason for forking is a very weird bug. In getAllKeys it checks if the target path exists, if not it creates it. What happens after first install is that it returns that the path doesn't exist, but the path creation then fails saying it does exist. Fix is to handle the path creation and continue normal operation as it can since the path exists. 
-Might be caused by a RNFetchBlob issue where either RNFetchBlob.fs.exists or RNFetchBlob.fs.mkdir has some bug in it.
+The reason for forking is a very weird bug. In getAllKeys it checks if the target path exists, if not it creates it. What happens after first install is it returns the path doesn't exist, but the path creation subsequently fails saying it does exist. 
+
+The fix is to handle the path creation and continue normal operation as it can without issue. 
+
+It might be caused by a RNFetchBlob issue where either RNFetchBlob.fs.exists or RNFetchBlob.fs.mkdir has some bug in it.
 
 # Redux persist filesystem storage
 
