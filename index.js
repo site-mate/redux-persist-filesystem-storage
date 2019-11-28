@@ -79,14 +79,10 @@ const FilesystemStorage = {
         }
       }),
 
-  getAllKeys: (callback?: (error: ?Error, keys: ?Array<string>) => any) => {
-    console.log('getAllKeys1');
-    
+  getAllKeys: (callback?: (error: ?Error, keys: ?Array<string>) => any) => {    
     return RNFetchBlob.fs
       .exists(options.storagePath)
       .then(async exists => {
-        console.log('getAllKeys2', exists);
-
         if (exists) {
           return true;
         }
@@ -94,15 +90,12 @@ const FilesystemStorage = {
         try {
           await RNFetchBlob.fs.mkdir(options.storagePath);
         } catch(e) {
-          console.log('getAllKeys2.1', e);
           return true;
         }
 
         return true;
       })
       .then(() => {
-        console.log('getAllKeys3');
-
         return RNFetchBlob.fs
         .ls(options.storagePath)
         .then(files => files.map<string>(file => options.fromFileName(file)))
@@ -114,7 +107,6 @@ const FilesystemStorage = {
         });
       })
       .catch(error => {
-        console.log('getAllKeysError', error);
         callback && callback(error);
         if (!callback) {
           throw error;
